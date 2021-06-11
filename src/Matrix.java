@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.util.Scanner;
 
 class Matrix {
@@ -10,8 +11,8 @@ class Matrix {
             System.out.println("1. Add Matrices");
             System.out.println("2. Multiply matrix by a constant");
             System.out.println("3. Multiply matrices");
+            System.out.println("4. Transpose a matrix");
             System.out.println("0. Exit");
-
             System.out.print("Please choose an action: ");
             int choice = scanner.nextInt();
 
@@ -89,6 +90,27 @@ class Matrix {
                     printMatrix(multipliedMatrix);
                     break;
                 }
+                case 4: {
+                    System.out.println("1. Main diagonal");
+                    System.out.println("2. Side diagonal");
+                    System.out.println("3. Vertical line");
+                    System.out.println("4. Horizontal line");
+
+                    int option = scanner.nextInt();
+                    System.out.print("Enter matrix size: ");
+                    int rows = scanner.nextInt();
+                    int cols = scanner.nextInt();
+
+                    System.out.println("Enter the matrix to be transposed:");
+
+                    double[][] inputMatrix = readMatrix(scanner, rows, cols);
+
+                    double[][] transposedMatrix = transpose(inputMatrix, option);
+                    System.out.print("The result is:");
+                    printMatrix(transposedMatrix);
+                    break;
+                }
+
                 case 0:
                     exit = true;
             }
@@ -150,5 +172,53 @@ class Matrix {
             }
         }
         System.out.println("");
+    }
+
+    public static double[][] transpose(double[][] matrix, int transposition) {
+        double[][] transposedMatrix = new double[matrix.length][matrix[0].length];
+        switch (transposition) {
+            case 1: {
+                for (int i = 0; i < matrix.length; i++) {
+                    for (int j = 0; j < matrix[0].length; j++) {
+                        if (i == j) {
+                            transposedMatrix[i][j] = matrix[i][j];
+                            continue;
+                        }
+                        transposedMatrix[i][j] = matrix[j][i];
+                    }
+                }
+                break;
+            }
+            case 2: {
+                for (int i = 0; i < matrix.length; i++) {
+                    for (int j = 0; j < matrix[0].length; j++) {
+                        if (i + j == matrix.length-1) {
+                            transposedMatrix[i][j] = matrix[i][j];
+                            continue;
+                        }
+                        transposedMatrix[i][j] = matrix[matrix.length - 1 - j][matrix.length - 1- i];
+                    }
+                }
+                break;
+            }
+            case 3: {
+                for (int i = 0; i < matrix.length; i++) {
+                    for (int j = 0; j < matrix[0].length; j++) {
+                        transposedMatrix[i][j] = matrix[i][matrix.length - 1 - j];
+                    }
+                }
+                break;
+            }
+            case 4: {
+                for (int i = 0; i < matrix.length; i++) {
+                    for (int j = 0; j < matrix[0].length; j++) {
+                        transposedMatrix[i][j] = matrix[matrix.length - 1 - i][j];
+                    }
+                }
+                break;
+            }
+
+        }
+        return transposedMatrix;
     }
 }
