@@ -12,6 +12,7 @@ class Matrix {
             System.out.println("2. Multiply matrix by a constant");
             System.out.println("3. Multiply matrices");
             System.out.println("4. Transpose a matrix");
+            System.out.println("5. Calculate a determinant");
             System.out.println("0. Exit");
             System.out.print("Please choose an action: ");
             int choice = scanner.nextInt();
@@ -109,6 +110,22 @@ class Matrix {
                     System.out.print("The result is:");
                     printMatrix(transposedMatrix);
                     break;
+                }
+
+                case 5: {
+                    System.out.print("Enter matrix size: ");
+
+                    int rows = scanner.nextInt();
+                    int cols = scanner.nextInt();
+
+                    System.out.println("Enter matrix:");
+
+                    double[][] inputMatrix = readMatrix(scanner, rows, cols);
+
+                    double determinant = determinant(inputMatrix);
+                    System.out.println("The determinant is:");
+                    System.out.println(determinant);
+
                 }
 
                 case 0:
@@ -220,5 +237,44 @@ class Matrix {
 
         }
         return transposedMatrix;
+    }
+
+    public static double determinant(double[][] matrix) {
+        if (matrix.length == 2) {
+            return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+        } else {
+
+            double total = 0;
+            int sign = 1;
+
+            for (int i = 0; i < matrix.length; i++) {
+                double[][] minor = minor(matrix, 0, i);
+                total += sign * matrix[0][i] * determinant(minor);
+                sign = -sign;
+            }
+
+            return total;
+        }
+    }
+
+    public static double[][] minor(double[][] matrix, int inputRow, int inputCol) {
+        double[][] minor = new double[matrix.length-1][matrix.length-1];
+
+        int outputRow = 0;
+        int outputCol = 0;
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                if (i != inputRow && j != inputCol) {
+                    minor[outputRow][outputCol++] = matrix[i][j];
+
+                    if (outputCol == minor.length) {
+                        outputCol = 0;
+                        outputRow++;
+                    }
+                }
+            }
+        }
+        return minor;
     }
 }
