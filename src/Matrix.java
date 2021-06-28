@@ -13,10 +13,11 @@ class Matrix {
             System.out.println("3. Multiply matrices");
             System.out.println("4. Transpose a matrix");
             System.out.println("5. Calculate a determinant");
+            System.out.println("6. Invert a matrix");
             System.out.println("0. Exit");
             System.out.print("Please choose an action: ");
             int choice = scanner.nextInt();
-
+            System.out.println("Your choice: " + choice);
             switch (choice) {
                 case 1: {
                     System.out.print("Enter the size of first matrix: ");
@@ -97,6 +98,7 @@ class Matrix {
                     System.out.println("3. Vertical line");
                     System.out.println("4. Horizontal line");
 
+                    System.out.print("Please choose a transpose: ");
                     int option = scanner.nextInt();
                     System.out.print("Enter matrix size: ");
                     int rows = scanner.nextInt();
@@ -107,7 +109,7 @@ class Matrix {
                     double[][] inputMatrix = readMatrix(scanner, rows, cols);
 
                     double[][] transposedMatrix = transpose(inputMatrix, option);
-                    System.out.print("The result is:");
+                    System.out.println("The result is:");
                     printMatrix(transposedMatrix);
                     break;
                 }
@@ -125,7 +127,54 @@ class Matrix {
                     double determinant = determinant(inputMatrix);
                     System.out.println("The determinant is:");
                     System.out.println(determinant);
+                    break;
+                }
 
+                case 6: {
+                    System.out.print("Enter Matrix size: ");
+
+                    int rows = scanner.nextInt();
+                    int cols = scanner.nextInt();
+
+                    System.out.println("Enter matrix:");
+
+                    double[][] inputMatrix = readMatrix(scanner, rows, cols);
+
+                    double determinant = determinant(inputMatrix);
+
+                    if (determinant == 0) {
+                        System.out.println("This matrix doesn't have an inverse.");
+                        break;
+                    }
+
+
+
+                    double[][] inverse = new double[rows][cols];
+                    if (rows == 2 && cols == 2) {
+                        for (int i = 0; i < rows; i++) {
+                            for (int j = 0; j < cols; j++) {
+                                inputMatrix[i][j] = inputMatrix[i][j]/determinant;
+                            }
+                        }
+                        inputMatrix[0][1] = -inputMatrix[0][1];
+                        inputMatrix[1][0] = -inputMatrix[1][0];
+
+                        inverse = transpose(inputMatrix,2);
+                        System.out.println("The result is:");
+                        printMatrix(inverse);
+                        break;
+                    }
+                    for (int i = 0; i < rows; i++) {
+                        for (int j = 0; j < cols; j++) {
+                            inverse[i][j] = determinant(minor(inputMatrix, i, j)) * Math.pow(-1, 2+i+j) / determinant;
+                        }
+                    }
+
+                    inverse = transpose(inverse, 1);
+
+                    System.out.println("The result is:");
+                    printMatrix(inverse);
+                    break;
                 }
 
                 case 0:
@@ -189,6 +238,8 @@ class Matrix {
             }
         }
         System.out.println("");
+        System.out.println("");
+
     }
 
     public static double[][] transpose(double[][] matrix, int transposition) {
